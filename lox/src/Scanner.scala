@@ -1,3 +1,4 @@
+package scanner
 import token.{Token,TokenType,Keywords}
 
 @annotation.tailrec
@@ -25,7 +26,7 @@ def peek_numeric(chars: List[Char], literal: List[Char], hasPeriod: Boolean, isV
 }
 
 object Scanner {
-def scan(text: String) = {
+  def scan(text: String): List[Token] = {
     val text_to_chars = text.toList
     var line_number = 1
     @annotation.tailrec()
