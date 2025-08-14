@@ -25,6 +25,7 @@ def peek_numeric(chars: List[Char], literal: List[Char], hasPeriod: Boolean, isV
   case (char::rest, _)=> peek_numeric(rest, char::literal, hasPeriod, isValid)
 }
 
+object Scanner {
 def scan(text: String) = {
     val text_to_chars = text.toList
     var line_number = 1
@@ -100,11 +101,12 @@ def scan(text: String) = {
 
     scan_token(text_to_chars, Nil).reverse
 }
+}
 
 val text = "! 1 bob while != >= ?"
 println("----TEXT----")
 println(text)
 
 println("-------------")
-val tokens = scan(text)
+val tokens = Scanner.scan(text)
 tokens.foreach(println)
