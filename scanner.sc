@@ -30,6 +30,7 @@ def scan(text: String) = {
     var line_number = 1
     @annotation.tailrec()
     def scan_token(chars: List[Char], tokens: List[Token]): List[Token]= {
+      // I would overload, but it doesn't seem possible
       def makeToken(tokenType: TokenType, char: Char) = {
         Token(tokenType, char.toString, Some(char), line_number) :: tokens
       }
