@@ -11,8 +11,8 @@ def peek_quote(chars: List[Char], literal: List[Char]): (List[Char], List[Char])
 @annotation.tailrec
 def peek_alphabetical(text: List[Char], literal: List[Char]): (List[Char], List[Char]) = text match {
   case Nil => (Nil, literal.reverse)
-  case (' ' | '\r' | '\t') ::rest => (rest, literal.reverse)
-  case char::rest => peek_alphabetical(rest, char::literal)
+  case char::rest if char.isLetter || char.isDigit || char == '_' => peek_alphabetical(rest, char::literal)
+  case c@_=> (c, literal.reverse)
 }
 
 @annotation.tailrec
