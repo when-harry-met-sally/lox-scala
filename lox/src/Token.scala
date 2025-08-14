@@ -1,3 +1,4 @@
+package token
 import scala.collection.immutable.HashMap
 case class Token(
   tokenType: TokenType,

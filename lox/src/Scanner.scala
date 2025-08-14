@@ -1,4 +1,3 @@
-//> using file "./token.sc"
 import token.{Token,TokenType,Keywords}
 
 @annotation.tailrec
@@ -102,11 +101,3 @@ def scan(text: String) = {
     scan_token(text_to_chars, Nil).reverse
 }
 }
-
-val text = "! 1 bob while != >= ?"
-println("----TEXT----")
-println(text)
-
-println("-------------")
-val tokens = Scanner.scan("a")
-tokens.foreach(println)
