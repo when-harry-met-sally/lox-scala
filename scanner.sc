@@ -108,5 +108,5 @@ println("----TEXT----")
 println(text)
 
 println("-------------")
-val tokens = Scanner.scan(text)
+val tokens = Scanner.scan("a")
 tokens.foreach(println)
