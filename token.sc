@@ -2,7 +2,7 @@ case class Token(
   tokenType: TokenType,
   lexeme: String,
   literal: Option[Any],
-  line: Int
+  line: Int,
 )
 
 enum TokenType {
