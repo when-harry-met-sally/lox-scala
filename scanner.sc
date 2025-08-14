@@ -16,11 +16,12 @@ def peek_alphabetical(text: List[Char], literal: List[Char]): (List[Char], List[
 }
 
 @annotation.tailrec
+// Fix numbers
 def peek_numeric(chars: List[Char], literal: List[Char], hasPeriod: Boolean, isValid: Boolean): (List[Char], List[Char], Boolean) = (chars, hasPeriod) match {
   case (Nil, _) => (Nil, literal.reverse, isValid)
+  case (char ::rest, _) if !char.isDigit || char != '.'|| char != '_' => (rest, literal.reverse, isValid)
   case ((c @ '.')::rest, true)=> peek_numeric(rest, c::literal, hasPeriod, false)
   case ((c @ '.')::rest, false)=> peek_numeric(rest, c::literal, true, isValid)
-  case ((' ' | '\r' | '\t') ::rest, _) => (rest, literal.reverse, isValid)
   case (char::rest, _)=> peek_numeric(rest, char::literal, hasPeriod, isValid)
 }
 
@@ -99,6 +100,10 @@ def scan(text: String) = {
     scan_token(text_to_chars, Nil).reverse
 }
 
+val text = "! 1 bob while != >= ?"
+println("----TEXT----")
+println(text)
 
-val tokens = scan("while == ! 1 1. 1.1 1.0.1 x")
+println("-------------")
+val tokens = scan(text)
 tokens.foreach(println)
