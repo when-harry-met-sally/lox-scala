@@ -97,14 +97,6 @@ def scan(text: String) = {
     scan_token(text_to_chars, Nil).reverse
 }
 
-// let scan (text : string) : Token.t list =
-//   let parsed_text = String.to_seq text |> List.of_seq in
-//   let _, line_number, tokens = _scan parsed_text 1 [] in
-//   let eof_token =
-//     { Token.kind = Token.EOF; line_number; column_number = 0; literal = None }
-//   in
-//   List.rev (eof_token :: tokens)
 
-
-val tokens = scan("\"billy bob\"")
+val tokens = scan("while \"billy bob\" var frank")
 println(tokens)
