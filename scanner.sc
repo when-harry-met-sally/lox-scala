@@ -17,10 +17,10 @@ def peek_alphabetical(chars: List[Char], literal: List[Char]): (List[Char], List
 }
 
 @annotation.tailrec
+// TODO: Revisit, this sould probably return option type
 def peek_numeric(chars: List[Char], literal: List[Char]): (List[Char], List[Char]) = chars match {
   case Nil => (Nil, literal.reverse)
   case (' ' | '\r' | '\t') ::rest => (rest, literal.reverse)
-  case char::rest if char.isLetter || char.isDigit || char == '_' => (rest, literal.reverse)
   case char::rest => peek_numeric(rest, char::literal)
 }
 
