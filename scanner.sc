@@ -9,10 +9,9 @@ def peek_quote(chars: List[Char], literal: List[Char]): (List[Char], List[Char])
 }
 
 @annotation.tailrec
-def peek_alphabetical(chars: List[Char], literal: List[Char]): (List[Char], List[Char]) = chars match {
+def peek_alphabetical(text: List[Char], literal: List[Char]): (List[Char], List[Char]) = text match {
   case Nil => (Nil, literal.reverse)
   case (' ' | '\r' | '\t') ::rest => (rest, literal.reverse)
-  case char::rest if char.isLetter || char.isDigit || char == '_' => (rest, literal.reverse)
   case char::rest => peek_alphabetical(rest, char::literal)
 }
 
@@ -71,8 +70,9 @@ def scan(text: String) = {
           var (rest2, literal) = peek_quote(rest, Nil)
           scan_token(rest2, makeTokens(TokenType.STRING, literal.toString))
         }
-        case c:: rest if c.isLetter => {
-          var (rest2, literal) = peek_alphabetical(rest, Nil)
+        case c @ (hd:: rest) if hd.isLetter => {
+          var (rest2, literal) = peek_alphabetical(c, Nil)
+          println(s"lit $literal")
           val literalAsString = literal.toString
           val keywords = Keywords.keywordTokenTypeMap.get(literalAsString)
           keywords match {
@@ -80,8 +80,8 @@ def scan(text: String) = {
             case _ => scan_token(rest2, makeTokens(TokenType.IDENTIFIER, literalAsString))
           }
         }
-        case c:: rest if c.isDigit => {
-          var (rest2, literal) = peek_numeric(rest, Nil)
+        case c @ (hd:: rest) if hd.isDigit => {
+          var (rest2, literal) = peek_numeric(c, Nil)
           val literalAsString = literal.toString
           val keywords = Keywords.keywordTokenTypeMap.get(literalAsString)
           keywords match {
@@ -98,5 +98,5 @@ def scan(text: String) = {
 }
 
 
-val tokens = scan("while \"billy bob\" var frank")
-println(tokens)
+val tokens = scan("while")
+tokens.foreach(println)
