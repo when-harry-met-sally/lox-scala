@@ -16,11 +16,12 @@ def peek_alphabetical(text: List[Char], literal: List[Char]): (List[Char], List[
 }
 
 @annotation.tailrec
-// TODO: Revisit, this sould probably return option type
-def peek_numeric(chars: List[Char], literal: List[Char]): (List[Char], List[Char]) = chars match {
-  case Nil => (Nil, literal.reverse)
-  case (' ' | '\r' | '\t') ::rest => (rest, literal.reverse)
-  case char::rest => peek_numeric(rest, char::literal)
+def peek_numeric(chars: List[Char], literal: List[Char], hasPeriod: Boolean, isValid: Boolean): (List[Char], List[Char], Boolean) = (chars, hasPeriod) match {
+  case (Nil, _) => (Nil, literal.reverse, isValid)
+  case ((c @ '.')::rest, true)=> peek_numeric(rest, c::literal, hasPeriod, false)
+  case ((c @ '.')::rest, false)=> peek_numeric(rest, c::literal, true, isValid)
+  case ((' ' | '\r' | '\t') ::rest, _) => (rest, literal.reverse, isValid)
+  case (char::rest, _)=> peek_numeric(rest, char::literal, hasPeriod, isValid)
 }
 
 def scan(text: String) = {
@@ -83,12 +84,11 @@ def scan(text: String) = {
           }
         }
         case c @ (hd:: rest) if hd.isDigit => {
-          var (rest2, literal) = peek_numeric(c, Nil)
+          var (rest2, literal, isValid) = peek_numeric(c, Nil, false, true)
           val literalAsString = literal.mkString
-          val keywords = Keywords.keywordTokenTypeMap.get(literalAsString)
-          keywords match {
-            case Some(keyword) => scan_token(rest2, makeTokens(keyword, literalAsString))
-            case _ => scan_token(rest2, makeTokens(TokenType.IDENTIFIER, literalAsString))
+          isValid match {
+            case true => scan_token(rest2, makeTokens(TokenType.NUMBER, literalAsString))
+            case false => scan_token(rest2, makeTokens(TokenType.UNKNOWN, literalAsString))
           }
         }
         // Uknown
@@ -100,5 +100,5 @@ def scan(text: String) = {
 }
 
 
-val tokens = scan("while == !")
+val tokens = scan("while == ! 1 1. 1.1 1.0.1 x")
 tokens.foreach(println)
