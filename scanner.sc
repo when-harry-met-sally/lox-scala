@@ -34,9 +34,12 @@ def scan(text: String) = {
       def makeTokens(tokenType: TokenType, chars: String) = {
         Token(tokenType, chars, Some(chars), line_number) :: tokens
       }
+      def makeEof() = {
+        Token(TokenType.EOF, "", None, line_number) :: tokens
+      }
       chars match {
         // EOF
-        case Nil => makeToken(TokenType.EOF, 'x')
+        case Nil => makeEof()
         // Whitespace
         case (' ' | '\r' | '\t')::rest => scan_token(rest, tokens)
         case '\n'::rest=> {
@@ -72,8 +75,7 @@ def scan(text: String) = {
         }
         case c @ (hd:: rest) if hd.isLetter => {
           var (rest2, literal) = peek_alphabetical(c, Nil)
-          println(s"lit $literal")
-          val literalAsString = literal.toString
+          val literalAsString = literal.mkString
           val keywords = Keywords.keywordTokenTypeMap.get(literalAsString)
           keywords match {
             case Some(keyword) => scan_token(rest2, makeTokens(keyword, literalAsString))
@@ -82,7 +84,7 @@ def scan(text: String) = {
         }
         case c @ (hd:: rest) if hd.isDigit => {
           var (rest2, literal) = peek_numeric(c, Nil)
-          val literalAsString = literal.toString
+          val literalAsString = literal.mkString
           val keywords = Keywords.keywordTokenTypeMap.get(literalAsString)
           keywords match {
             case Some(keyword) => scan_token(rest2, makeTokens(keyword, literalAsString))
@@ -98,5 +100,5 @@ def scan(text: String) = {
 }
 
 
-val tokens = scan("while")
+val tokens = scan("while == !")
 tokens.foreach(println)
