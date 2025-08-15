@@ -16,7 +16,6 @@ def peek_alphabetical(text: List[Char], literal: List[Char]): (List[Char], List[
 }
 
 @annotation.tailrec
-// TODO: Fix numbers
 def peek_numeric(chars: List[Char], literal: List[Char], hasPeriod: Boolean, isValid: Boolean): (List[Char], List[Char], Boolean) = (chars) match {
   case Nil => (Nil, literal.reverse, isValid)
   case (' ' | '\r' | '\t')::rest => (rest, literal.reverse, isValid)
