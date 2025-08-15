@@ -103,7 +103,6 @@ object Scanner {
         case (c @ _ ):: rest => scan_token(rest, makeToken(TokenType.UNKNOWN, c))      
       }
     }
-
     scan_token(text_to_chars, Nil).reverse
 }
 }
