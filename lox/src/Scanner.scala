@@ -34,11 +34,11 @@ object Scanner {
     @annotation.tailrec()
     def scan_token(chars: List[Char], tokens: List[Token]): List[Token]= {
       // I would overload, but it doesn't seem possible
-      def makeToken(tokenType: TokenType, char: Char) = {
-        Token(tokenType, char.toString, Some(char), line_number) :: tokens
-      }
-      def makeTokens(tokenType: TokenType, chars: String) = {
-        Token(tokenType, chars, Some(chars), line_number) :: tokens
+      def makeToken(tokenType: TokenType, value: Char | String) = {
+        val (lexeme, literal) = value match
+          case c: Char   => (c.toString, Some(c))
+          case s: String => (s, Some(s))
+        Token(tokenType, lexeme, literal, line_number) :: tokens
       }
       def makeEof() = {
         Token(TokenType.EOF, "", None, line_number) :: tokens
@@ -65,10 +65,10 @@ object Scanner {
         case (c @ '/' ):: rest => scan_token(rest, makeToken(TokenType.SLASH, c))
         case (c @ '*' ):: rest => scan_token(rest, makeToken(TokenType.STAR, c))
         // Multi Characters
-        case '!':: '=' :: rest => scan_token(rest, makeTokens(TokenType.BANG_EQUAL, "!="))
-        case '=' :: '=' :: rest => scan_token(rest, makeTokens(TokenType.EQUAL_EQUAL, "=="))
-        case '>' :: '=' :: rest => scan_token(rest, makeTokens(TokenType.GREATER_EQUAL, ">="))
-        case '<' :: '=' :: rest => scan_token(rest, makeTokens(TokenType.LESS_EQUAL, "<="))
+        case '!':: '=' :: rest => scan_token(rest, makeToken(TokenType.BANG_EQUAL, "!="))
+        case '=' :: '=' :: rest => scan_token(rest, makeToken(TokenType.EQUAL_EQUAL, "=="))
+        case '>' :: '=' :: rest => scan_token(rest, makeToken(TokenType.GREATER_EQUAL, ">="))
+        case '<' :: '=' :: rest => scan_token(rest, makeToken(TokenType.LESS_EQUAL, "<="))
         // Single Characters Ambiguous
         case (c @ '!' ):: rest => scan_token(rest, makeToken(TokenType.BANG, c))
         case (c @ '=' ):: rest => scan_token(rest, makeToken(TokenType.EQUAL, c))
@@ -77,23 +77,23 @@ object Scanner {
         // Special
         case (c @ '"' ):: rest => {
           var (rest2, literal) = peek_quote(rest, Nil)
-          scan_token(rest2, makeTokens(TokenType.STRING, literal.mkString))
+          scan_token(rest2, makeToken(TokenType.STRING, literal.mkString))
         }
         case c @ (hd:: rest) if hd.isLetter => {
           var (rest2, literal) = peek_alphabetical(c, Nil)
           val literalAsString = literal.mkString
           val keywords = Keywords.keywordTokenTypeMap.get(literalAsString)
           keywords match {
-            case Some(keyword) => scan_token(rest2, makeTokens(keyword, literalAsString))
-            case _ => scan_token(rest2, makeTokens(TokenType.IDENTIFIER, literalAsString))
+            case Some(keyword) => scan_token(rest2, makeToken(keyword, literalAsString))
+            case _ => scan_token(rest2, makeToken(TokenType.IDENTIFIER, literalAsString))
           }
         }
         case c @ (hd:: rest) if hd.isDigit => {
           var (rest2, literal, isValid) = peek_numeric(c, Nil, false, true)
           val literalAsString = literal.mkString
           isValid match {
-            case true => scan_token(rest2, makeTokens(TokenType.NUMBER, literalAsString))
-            case false => scan_token(rest2, makeTokens(TokenType.UNKNOWN, literalAsString))
+            case true => scan_token(rest2, makeToken(TokenType.NUMBER, literalAsString))
+            case false => scan_token(rest2, makeToken(TokenType.UNKNOWN, literalAsString))
           }
         }
         // Uknown
