@@ -78,7 +78,7 @@ object Scanner {
         // Special
         case (c @ '"' ):: rest => {
           var (rest2, literal) = peek_quote(rest, Nil)
-          scan_token(rest2, makeTokens(TokenType.STRING, literal.toString))
+          scan_token(rest2, makeTokens(TokenType.STRING, literal.mkString))
         }
         case c @ (hd:: rest) if hd.isLetter => {
           var (rest2, literal) = peek_alphabetical(c, Nil)

@@ -20,5 +20,21 @@ object BarTests extends TestSuite {
       val expected = Token(TokenType.UNKNOWN, "1.2.", Some("1.2."), 1)
       assert(tokens.head == expected)
     }
+    test("Scans keyword") {
+      val tokens = Scanner.scan("while")
+      val expected = Token(TokenType.WHILE, "while", Some("while"), 1)
+      assert(tokens.head == expected)
+    }
+    test("Scans identifier") {
+      val tokens = Scanner.scan("bob")
+      val expected = Token(TokenType.IDENTIFIER, "bob", Some("bob"), 1)
+      assert(tokens.head == expected)
+    }
+    test("Scans quote") {
+      val tokens = Scanner.scan("\"bob\"")
+      println(tokens.head)
+      val expected = Token(TokenType.STRING, "bob", Some("bob"), 1)
+      assert(tokens.head == expected)
+    }
   }
 }
