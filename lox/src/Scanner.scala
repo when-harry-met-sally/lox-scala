@@ -17,12 +17,15 @@ def peek_alphabetical(text: List[Char], literal: List[Char]): (List[Char], List[
 
 @annotation.tailrec
 // TODO: Fix numbers
-def peek_numeric(chars: List[Char], literal: List[Char], hasPeriod: Boolean, isValid: Boolean): (List[Char], List[Char], Boolean) = (chars, hasPeriod) match {
-  case (Nil, _) => (Nil, literal.reverse, isValid)
-  case (char ::rest, _) if !char.isDigit || char != '.'|| char != '_' => (rest, literal.reverse, isValid)
-  case ((c @ '.')::rest, true)=> peek_numeric(rest, c::literal, hasPeriod, false)
-  case ((c @ '.')::rest, false)=> peek_numeric(rest, c::literal, true, isValid)
-  case (char::rest, _)=> peek_numeric(rest, char::literal, hasPeriod, isValid)
+def peek_numeric(chars: List[Char], literal: List[Char], hasPeriod: Boolean, isValid: Boolean): (List[Char], List[Char], Boolean) = (chars) match {
+  case Nil => (Nil, literal.reverse, isValid)
+  case (' ' | '\r' | '\t')::rest => (rest, literal.reverse, isValid)
+  case (c @ '.')::rest=> hasPeriod match {
+    case true => peek_numeric(rest, c::literal, true, false)
+    case false => peek_numeric(rest, c::literal, true, isValid)
+  }
+  case hd::rest if hd.isDigit || hd == '_' => peek_numeric(rest, hd::literal, hasPeriod, isValid)
+  case hd::rest => (rest, (hd::literal).reverse, false)
 }
 
 object Scanner {

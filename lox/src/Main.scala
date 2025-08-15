@@ -11,6 +11,9 @@ object Lox {
 
   def main(args: Array[String]): Unit = {
     // Example usage
-    scanText("Scala is pretty snazzy")
+    val text = "1.23"
+    println(text)
+    println("-----")
+    scanText(text)
   }
 }
