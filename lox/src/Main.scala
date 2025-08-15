@@ -1,10 +1,16 @@
 package lox
 import scanner.Scanner
+import token.Token
 
-object Example {
-  def main(args: Array[String]): Unit = {
-    val text = "Scala is pretty snazzy"
-    val tokens = Scanner.scan("a")
+object Lox {
+  def scanText(text: String): List[Token] = {
+    val tokens = Scanner.scan(text)
     tokens.foreach(println)
+    tokens
+  }
+
+  def main(args: Array[String]): Unit = {
+    // Example usage
+    scanText("Scala is pretty snazzy")
   }
 }
