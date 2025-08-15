@@ -36,5 +36,17 @@ object BarTests extends TestSuite {
       val expected = Token(TokenType.STRING, "bob", Some("bob"), 1)
       assert(tokens.head == expected)
     }
+    test("Scans single symbol") {
+      val tokens = Scanner.scan("=")
+      println(tokens.head)
+      val expected = Token(TokenType.EQUAL, "=", Some("="), 1)
+      assert(tokens.head == expected)
+    }
+    test("Scans multi symbol") {
+      val tokens = Scanner.scan("==")
+      println(tokens.head)
+      val expected = Token(TokenType.EQUAL_EQUAL, "==", Some("=="), 1)
+      assert(tokens.head == expected)
+    }
   }
 }

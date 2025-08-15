@@ -36,7 +36,10 @@ object Scanner {
       // I would overload, but it doesn't seem possible
       def makeToken(tokenType: TokenType, value: Char | String) = {
         val (lexeme, literal) = value match
-          case c: Char   => (c.toString, Some(c))
+          case c: Char  => {
+            val asString = c.toString
+            (asString, Some(asString))
+          }
           case s: String => (s, Some(s))
         Token(tokenType, lexeme, literal, line_number) :: tokens
       }
