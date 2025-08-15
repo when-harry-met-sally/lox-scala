@@ -48,5 +48,12 @@ object BarTests extends TestSuite {
       val expected = Token(TokenType.EQUAL_EQUAL, "==", Some("=="), 1)
       assert(tokens.head == expected)
     }
+    test("Scans line number") {
+      val tokens = Scanner.scan(""" 
+        ==""")
+      println(tokens.head)
+      val expected = Token(TokenType.EQUAL_EQUAL, "==", Some("=="), 2)
+      assert(tokens.head == expected)
+    }
   }
 }
